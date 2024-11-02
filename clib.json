@@ -1,0 +1,7 @@
+{
+  "name": "Database in c",
+  "version": "0.1.0",
+  "dependencies": {
+    "Isty001/dotenv-c": "0.1.0"
+  }
+}
