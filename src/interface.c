@@ -3,6 +3,14 @@
 #include <string.h>
 #include <signal.h>
 
+void displayLoginPage()
+{
+    // mvaddstr(0, COLS / 2, "C Database Employee Management\n");
+    mvaddstr(2, 2, "Enter admin login credentials:");
+    mvaddstr(4, 12, "Enter username:");
+    mvaddstr(5, 12, "Enter password:");
+    // 16 is the size of the string
+}
 void handleResize(int sig)
 {
 
@@ -13,58 +21,48 @@ void handleResize(int sig)
     refresh();
     clear();
 
-    // char tmp[128];
-    // // sprintf(tmp, "%dx%d", COLS, LINES);
-    // char *text = "fuck you";
+    char *text = "C Database Employee Management";
     // // Approximate the center
-    // int x = COLS / 2 - strlen(text) / 2;
-    // int y = LINES / 2 - 1;
+    int x = COLS / 2 - strlen(text) / 2;
 
-    // mvaddstr(y, x, "FUCK YOU");
+    mvaddstr(0, x, text);
+    displayLoginPage();
     refresh();
 
     signal(SIGWINCH, handleResize);
 }
+
 void initTerminalInterface()
 {
-    // warning basically playground code i never used this shi before so i gotta play around
     initscr();
     cbreak();
-    noecho();
+    // noecho();
     keypad(stdscr, TRUE);
 
-    // COLS/LINES are now set
-    // handleResize(0);
     signal(SIGWINCH, handleResize);
-
-    char *text = "fuck you";
-    int x = 0;
-    int y = 0;
-
     int ch;
-    while ((ch = getch()) != 'q')
+    char user[100] = "";
+    char password[100] = "";
+    do
     {
-        switch (ch)
+        handleResize(0);
+        displayLoginPage();
+
+        move(4, 12 + 16);
+        getstr(user);
+
+        move(5, 12 + 16);
+        getstr(password);
+        if (user[0] != '\0' && password[0] != '\0')
+            clear();
+        else
         {
-        case KEY_RIGHT:
-            x++;
-            break;
-        case KEY_LEFT:
-            x--;
-            break;
-
-        case KEY_UP:
-            y--;
-            break;
-
-        case KEY_DOWN:
-            y++;
-            break;
+            clear();
+            handleResize(0);
+            displayLoginPage();
         }
-
-        clear();
-        mvprintw(y, x, "");
         refresh();
-    }
+    } while ((ch = getch()) != 'q');
+
     endwin();
 }
